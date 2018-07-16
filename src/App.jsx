@@ -4,8 +4,7 @@ import { Input } from 'antd';
 
 import './App.css';
 
-window.mymap = Map;
-console.log(Map.geometry);
+let myMap = null;
 const mapState = { center: [55.76, 37.64], zoom: 10 };
 
 class App extends PureComponent {
@@ -22,13 +21,13 @@ class App extends PureComponent {
     this.setState(prevState => ({
       placemarks: [...prevState.placemarks, {
         name: name,
-        coordinates: [55.76, 37.64],
+        coordinates: myMap.getCenter(),
       }],
     }));
   };
   
   MyMap = () => (
-    <Map state={mapState}>
+    <Map instanceRef={(map) => {myMap = map}} state={mapState}>
       {this.state.placemarks.map((placemark, i) => (
         <Placemark
           key={`${placemark.name}-${i}`}
@@ -44,9 +43,9 @@ class App extends PureComponent {
       <div className="App">
         <Input
           placeholder="Введите название точки"
-          onPressEnter={this.addPlacemark}
+          onPressEnter={() => this.addPlacemark()}
         />
-        <YMaps>
+        <YMaps onApiAvaliable={(ymaps) => null}>
           {this.MyMap()}
         </YMaps>
       </div>
