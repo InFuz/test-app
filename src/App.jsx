@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
-import { Input } from 'antd';
+import { Input, List, Icon } from 'antd';
 
 import './App.css';
 
@@ -9,6 +9,7 @@ const mapState = { center: [55.76, 37.64], zoom: 10 };
 
 class App extends PureComponent {
   state = {
+    newPlacemarksName: '',
     placemarks: [
       {
         name: 'Это метка',
@@ -17,18 +18,28 @@ class App extends PureComponent {
     ],
   };
 
-  addPlacemark = (name) => {
+  addPlacemark = () => {
     this.setState(prevState => ({
       placemarks: [...prevState.placemarks, {
-        name: name,
+        name: this.state.newPlacemarksName,
         coordinates: myMap.getCenter(),
       }],
     }));
   };
+
+  removePlacemark = (index) => {
+    this.setState(prevState => ({
+      placemarks: prevState.placemarks.filter((placemark, i) => (i !== index ? placemark : undefined))
+    }));
+  };
+
+  onChangePlacemarksName = (e) => {
+    this.setState({ newPlacemarksName: e.target.value });
+  };
   
-  MyMap = () => (
+  MyMap = (placemarks) => (
     <Map instanceRef={(map) => {myMap = map}} state={mapState}>
-      {this.state.placemarks.map((placemark, i) => (
+      {placemarks.map((placemark, i) => (
         <Placemark
           key={`${placemark.name}-${i}`}
           geometry={{coordinates: placemark.coordinates}}
@@ -38,16 +49,28 @@ class App extends PureComponent {
       ))}
     </Map>
   );
+//TODO обновление координат точки при перетаскивании, соединение линией
   render() {
     return (
       <div className="App">
         <Input
           placeholder="Введите название точки"
+          onChange={this.onChangePlacemarksName}
           onPressEnter={() => this.addPlacemark()}
         />
         <YMaps onApiAvaliable={(ymaps) => null}>
-          {this.MyMap()}
+          {this.MyMap(this.state.placemarks)}
         </YMaps>
+        <List
+          size="small"
+          bordered
+          dataSource={this.state.placemarks}
+          renderItem={(item, i) => (
+            <List.Item>
+              {i}{item.name}<Icon onClick={() => this.removePlacemark(i)} type="close-circle" />
+            </List.Item>
+          )}
+        />
       </div>
     );
   }
