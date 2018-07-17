@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.7.0",
     "react": "^16.4.1",
+    "react-beautiful-dnd": "^8.0.4",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
     "react-yandex-maps": "^2.2.0"
