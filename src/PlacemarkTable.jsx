@@ -1,5 +1,6 @@
 import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import Icon from 'antd/lib/icon';
 
 const reorder =  (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -11,25 +12,22 @@ const reorder =  (list, startIndex, endIndex) => {
 
 const grid = 8;
 const getItemStyle = (draggableStyle, isDragging) => ({
-  // some basic styles to make the items look a bit nicer
   userSelect: 'none',
   padding: grid * 2,
   margin: `0 0 ${grid}px 0`,
+  color: 'white',
+  background: isDragging ? '#009ce8' : 'grey',
   
-  // change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'grey',
-  
-  // styles we need to apply on draggables
   ...draggableStyle
 });
 const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
+  background: isDraggingOver ? 'lightgrey' : 'lightgrey',
   padding: grid,
   width: 250
 });
       
-export default function PlacemarkTable({placemarks, updatePlacemarksOrder}) {
-  const onDragEnd = (result) => {
+export default function PlacemarkTable({placemarks, updatePlacemarksOrder, removePlacemark}) {
+  const hadleOnDragEnd = (result) => {
     if(!result.destination) {
        return; 
     }
@@ -43,7 +41,7 @@ export default function PlacemarkTable({placemarks, updatePlacemarksOrder}) {
     updatePlacemarksOrder(items);
   };
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={hadleOnDragEnd}>
       <Droppable droppableId="droppable">
         {(provided, snapshot) => (
           <div
@@ -60,6 +58,7 @@ export default function PlacemarkTable({placemarks, updatePlacemarksOrder}) {
                 {(provided, snapshot) => (
                   <div>
                     <div
+                      className='item'
                       ref={provided.innerRef}
                       {...provided.dragHandleProps}
                       {...provided.draggableProps}
@@ -69,6 +68,11 @@ export default function PlacemarkTable({placemarks, updatePlacemarksOrder}) {
                       )}
                     >
                       {item.name}
+                      <Icon
+                        className='item__icon'
+                        onClick={() => removePlacemark(index)}
+                        type="close-circle"
+                      />
                     </div>
                     {provided.placeholder}
                   </div>

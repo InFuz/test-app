@@ -1,0 +1,23 @@
+.root {
+    height: 100%;
+}
+
+.app {
+    height: 100%;
+    display: flex;
+}
+
+.none {
+    display: none;
+}
+
+.item {
+    position: relative;
+}
+
+.item__icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
