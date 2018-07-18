@@ -6,9 +6,12 @@ export default function MyPlacemark({placemarks, handleOnDragEnd}) {
     <div>
       {placemarks.map((p, i) => (
         <Placemark
-          key={`${p.name}-${i}`}
+          key={p.id}
           geometry={{coordinates: p.coordinates}}
-          properties={{balloonContent: p.name}}
+          properties={{
+            hintContent: p.name,
+            balloonContent: p.name,
+          }}
           options={{draggable: true,}}
           onDragEnd={(e) => handleOnDragEnd(e, i)}
         />

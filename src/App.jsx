@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { YMaps, Map } from 'react-yandex-maps';
-import { Input } from 'antd';
+import Input from 'antd/lib/input';
+import uniqueId from 'lodash/uniqueId';
 
 import PlacemarkTable from './PlacemarkTable';
 import PlacemarkList from './PlacemarkList';
@@ -16,12 +17,14 @@ export default class App extends PureComponent {
     newPlacemarksName: '',
     placemarks: [
       {
-        name: 'Это метка',
+        id: uniqueId(),
+        name: 'Метка',
         coordinates: [55.751574, 37.573856],
       },
       {
+        id: uniqueId(),
         name: 'Это метка',
-        coordinates: [55.741574, 37.583856],
+        coordinates: [55.741574, 37.593856],
       },
     ],
   };
@@ -31,6 +34,7 @@ export default class App extends PureComponent {
     if (newPlacemarksName) {
       this.setState(prevState => ({
         placemarks: [...prevState.placemarks, {
+          id: uniqueId(),
           name: newPlacemarksName ,
           coordinates: myMap.getCenter(),
         }],
@@ -61,6 +65,10 @@ export default class App extends PureComponent {
       })
     }));
   };
+
+  updatePlacemarksOrder = (state) => {
+    this.setState({ placemarks: state });
+  };
   
   render() {
     const { placemarks } = this.state;
@@ -84,7 +92,7 @@ export default class App extends PureComponent {
           placemarks={placemarks}
           removePlacemark={this.removePlacemark}
         />
-        <PlacemarkTable placemarks={placemarks} />
+        <PlacemarkTable placemarks={placemarks} updatePlacemarksOrder={this.updatePlacemarksOrder} />
       </div>
     );
   }
